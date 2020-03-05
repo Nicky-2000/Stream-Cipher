@@ -14,7 +14,10 @@ char *encode(char *plaintext, unsigned long key);
 char *decode (char *ciphertext, unsigned long key);
 
 
-#ifndef MARMOSET_TESTING
+/////////////////////////
+//MAIN USED FOR TESTING//
+/////////////////////////
+
 int main(int argc, const char * argv[])
 {
     char str0[]{"Hello world!"};
@@ -32,12 +35,14 @@ int main(int argc, const char * argv[])
     
     ciphertext = nullptr;
     plaintext = nullptr;
-    
 }
-#endif
+
+////////////////////////////////////////////////////////////////////////////////////
+// ENCODER FUNCTION -- Takes in a key and a dynamically allocated character array // 
+////////////////////////////////////////////////////////////////////////////////////
+
 char *encode(char *plaintext, unsigned long key)
-{
-    
+{   
     int y {0};
     int size_of{0};
     
@@ -46,23 +51,18 @@ char *encode(char *plaintext, unsigned long key)
         y++;
     }
     
-//    (5*ceil(size_of/4.00)) + 1;
     size_of = y;
     int number_of_printable = y;
     y %= 4;
     int number_of_nulls;
     if (y == 0)
-    {
         number_of_nulls = 0;
-    }
-    else {
+    else 
         number_of_nulls = 4-y;
-    }
+    
     size_of += number_of_nulls;
     
-    // maybe this size of value should just be the number of plaintext entries. Then I can add the nulls after
-    
-    std::cout << "number of printable: " << number_of_printable <<" size of: " << size_of << " y: " <<y <<std::endl;
+    // TEST LINE: std::cout << "number of printable: " << number_of_printable <<" size of: " << size_of << " y: " <<y <<std::endl;
     
     unsigned int array_mul_of_four[size_of];
     
@@ -76,7 +76,7 @@ char *encode(char *plaintext, unsigned long key)
         {
             if (x >= number_of_printable)
             {
-            array_mul_of_four[x] = '\0';
+                array_mul_of_four[x] = '\0';
             }
             else
             {
@@ -84,14 +84,6 @@ char *encode(char *plaintext, unsigned long key)
             }
         }
     }
-    
-//    for (int i{0}; i < size_of; i ++)
-//    {
-//        std::cout << array_mul_of_four[i] << " ";
-//    }
-//    std::cout<< std::endl;
-    
-    // initialize state array (0-255)
     unsigned char state[256];
     for (short i {0}; i < 256; i++)
     {
@@ -173,7 +165,8 @@ char *encode(char *plaintext, unsigned long key)
     
     char *ciphertext = new char [size_of_base_eighty_five];
     unsigned char array_eight_five[size_of_base_eighty_five];
-    //armour
+    //ASCii armour
+    
     unsigned int thirty_two_bits{0};
     int mul_of_five{0};
     for (int k {0}; k < blocks; k++)
@@ -211,15 +204,15 @@ char *encode(char *plaintext, unsigned long key)
     }
     ciphertext[size_of_base_eighty_five - 1] = '\0';
     
-//    for (int i{0}; i < size_of_base_eighty_five; i ++)
-//              {
-//                  std::cout << ciphertext[i] << " ";
-//              }
-//    std::cout << std::endl;
-//
     return ciphertext;
 }
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+// DECODER FUNCTION -- Takes in a key and a dynamically allocated character array // 
+////////////////////////////////////////////////////////////////////////////////////
 
 char *decode (char *ciphertext, unsigned long key)
 {
@@ -231,7 +224,7 @@ char *decode (char *ciphertext, unsigned long key)
         cipher_length++;
     }
 
-    std::cout << "Cipher Length: " << cipher_length << std::endl;
+   #Test Line: std::cout << "Cipher Length: " << cipher_length << std::endl;
     
     unsigned long num_of_thirty_two_nums = (cipher_length / 5);
     unsigned int array_of_thirty_two [num_of_thirty_two_nums];
